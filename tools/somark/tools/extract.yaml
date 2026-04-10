@@ -22,13 +22,104 @@ parameters:
       en_US: "Supported files: PDF, PNG, JPG, JPEG, BMP, TIFF, JP2, DIB, PPM, PGM, PBM, GIF, HEIC, HEIF, WEBP, XPM, TGA, DDS, XBM, DOC, DOCX, PPT, PPTX. Max 200MB/300 pages."
       zh_Hans: "支持的文件: PDF, PNG, JPG, JPEG, BMP, TIFF, JP2, DIB, PPM, PGM, PBM, GIF, HEIC, HEIF, WEBP, XPM, TGA, DDS, XBM, DOC, DOCX, PPT, PPTX. 大小不超过 200MB/300页。"
     form: llm
-
+  - name: output_formats
+    type: array
+    required: true
+    label:
+      en_US: Output Formats
+      zh_Hans: 输出格式列表
+    human_description:
+      en_US: "Output format, please choose at least one. Supported formats are json / markdown / somarkdown / zip. Among them, zip will package the output file into a compressed archive."
+      zh_Hans: "输出格式，至少选一个。支持 json / markdown / somarkdown / zip，其中 zip 将输出文件打包为压缩包。"
+    form: llm
+    input_schema:
+      type: array
+      items:
+        type: string
+        enum:
+          - markdown
+          - json
+          - zip
+          - somarkdown
+      minItems: 1
+  - name: element_formats
+    type: object
+    required: false
+    label:
+      en_US: Element Formats
+      zh_Hans: 元素格式配置
+    human_description:
+      en_US: "Element format configuration, which controls the output format of various elements."
+      zh_Hans: "元素格式配置，控制各类元素的输出格式。"
+    form: form
+    input_schema:
+      type: object
+      properties:
+        image:
+          type: string
+          enum:
+            - url
+            - base64
+            - none
+        formula:
+          type: string
+          enum:
+            - latex
+            - mathml
+            - ascii
+        table:
+          type: string
+          enum:
+            - markdown
+            - html
+            - image
+  #        cs:
+  #          type: string
+  #          enum:
+  #            - image
+  - name: feature_config
+    type: object
+    required: false
+    label:
+      en_US: Feature Config
+      zh_Hans: 功能配置
+    human_description:
+      en_US: "Feature configuration."
+      zh_Hans: "功能配置。"
+    form: form
+    input_schema:
+      type: object
+      properties:
+        enable_text_cross_page:
+          type: boolean
+        enable_table_cross_page:
+          type: boolean
+        enable_title_level_recognition:
+          type: boolean
+        enable_inline_image:
+          type: boolean
+        enable_table_image:
+          type: boolean
+        enable_image_understanding:
+          type: boolean
+        keep_header_footer:
+          type: boolean
 output_schema:
   type: object
   properties:
+    json:
+      type: object
+      description: "The parsed content in JSON format"
     markdown:
       type: string
       description: "The parsed content in Markdown format"
+    somarkdown:
+      type: string
+      description: "The parsed content in SoMarkDown format"
+    zip:
+      type: string
+      description: "Download URL for the ZIP file"
+
 
 extra:
   python:
