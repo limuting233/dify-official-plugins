@@ -73,10 +73,10 @@ parameters:
             - markdown
             - html
             - image
-  #        cs:
-  #          type: string
-  #          enum:
-  #            - image
+          cs:
+            type: string
+            enum:
+              - image
   - name: feature_config
     type: object
     required: false

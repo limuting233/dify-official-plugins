@@ -61,13 +61,13 @@ class ExtractTool(Tool):
             "image": "url",
             "formula": "latex",
             "table": "html",
-            # "cs": "image",
+            "cs": "image",
         }
         allowed_element_formats = {
             "image": {"url", "base64", "none"},
             "formula": {"latex", "mathml", "ascii"},
             "table": {"markdown", "html", "image"},
-            # "cs": {"image"},
+            "cs": {"image"},
         }
         raw_element_formats = tool_parameters.get("element_formats") or {}
 
@@ -103,8 +103,8 @@ class ExtractTool(Tool):
 
             element_formats["image"] = image_value
 
-        # for key in ("formula", "table", "cs"):
-        for key in ("formula", "table"):
+        for key in ("formula", "table", "cs"):
+            # for key in ("formula", "table"):
             default_value = default_element_formats[key]
             value = raw_element_formats.get(key, default_value)
             if value is None:
@@ -161,7 +161,7 @@ class ExtractTool(Tool):
 
         # 3. Construct URL
         base_url = base_url.rstrip("/")
-        url = f"{base_url}/extract/acc_sync"
+        url = f"{base_url}/parse/acc_sync"
 
         # 4. Prepare request
         try:
