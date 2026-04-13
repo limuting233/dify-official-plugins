@@ -64,7 +64,7 @@ class ExtractTool(Tool):
             "cs": "image",
         }
         allowed_element_formats = {
-            "image": {"url", "base64", "none"},
+            "image": {"url", "base64", "file", "none"},
             "formula": {"latex", "mathml", "ascii"},
             "table": {"markdown", "html", "image"},
             "cs": {"image"},
@@ -84,11 +84,10 @@ class ExtractTool(Tool):
         if zip_requested:
             if not image_provided or raw_image_value is None:
                 element_formats["image"] = "file"
-            elif raw_image_value == "none":
-                element_formats["image"] = "none"
+
             else:
                 yield self.create_text_message(
-                    "Error: When zip is included, element_formats.image must be 'none' or omitted."
+                    "Error: When zip is included, element_formats.image must be 'file' or omitted."
                 )
                 return
         else:

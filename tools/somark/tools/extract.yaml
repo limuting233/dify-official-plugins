@@ -60,6 +60,7 @@ parameters:
           enum:
             - url
             - base64
+            - file
             - none
         formula:
           type: string
