@@ -161,7 +161,7 @@ class ExtractTool(Tool):
 
         # 3. Construct URL
         base_url = base_url.rstrip("/")
-        url = f"{base_url}/parse/acc_sync"
+        url = f"{base_url}/parse/sync"
 
         # 4. Prepare request
         try:
