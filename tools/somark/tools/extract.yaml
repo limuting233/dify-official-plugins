@@ -27,7 +27,6 @@ parameters:
     type: checkbox
     required: false
     form: form
-    default: markdown
     label:
       en_US: 'Output Formats'
       zh_Hans: '输出格式'

@@ -8,6 +8,22 @@ from dify_plugin.entities.tool import ToolInvokeMessage
 
 logger = logging.getLogger(__name__)
 
+# 默认元素格式
+DEFAULT_ELEMENT_FORMATS = {
+    "image": "url",
+    "formula": "latex",
+    "table": "html",
+    "cs": "image",
+}
+
+# 支持的元素格式
+SUPPORTED_ELEMENT_FORMATS = {
+    "image": ["url", "base64", "none"],
+    "formula": ["latex", "mathml", "ascii"],
+    "table": ["markdown", "html", "image"],
+    "cs": ["image"],
+}
+
 
 class ExtractTool(Tool):
     def _invoke(
@@ -18,36 +34,9 @@ class ExtractTool(Tool):
         Invoke the Somark extraction tool.
         """
 
-        # file = tool_parameters.get("file")
-        # print(f"file: {file}")
-        # output_formats = tool_parameters.get("output_formats")
-        # print(f"output_formats: {output_formats}")
-        # element_formats_image = tool_parameters.get("element_formats_image")
-        # print(f"element_formats_image: {element_formats_image}")
-        # element_formats_formula = tool_parameters.get("element_formats_formula")
-        # print(f"element_formats_formula: {element_formats_formula}")
-        # element_formats_table = tool_parameters.get("element_formats_table")
-        # print(f"element_formats_table: {element_formats_table}")
-        # element_formats_cs = tool_parameters.get("element_formats_cs")
-        # print(f"element_formats_cs: {element_formats_cs}")
-        # feature_config_enable_text_cross_page = tool_parameters.get("feature_config_enable_text_cross_page")
-        # print(f"feature_config_enable_text_cross_page: {feature_config_enable_text_cross_page}")
-        # feature_config_enable_table_cross_page = tool_parameters.get("feature_config_enable_table_cross_page")
-        # print(f"feature_config_enable_table_cross_page: {feature_config_enable_table_cross_page}")
-        # feature_config_enable_title_level_recognition = tool_parameters.get("feature_config_enable_title_level_recognition")
-        # print(f"feature_config_enable_title_level_recognition: {feature_config_enable_title_level_recognition}")
-        # feature_config_enable_inline_image = tool_parameters.get("feature_config_enable_inline_image")
-        # print(f"feature_config_enable_inline_image: {feature_config_enable_inline_image}")
-        # feature_config_enable_table_image = tool_parameters.get("feature_config_enable_table_image")
-        # print(f"feature_config_enable_table_image: {feature_config_enable_table_image}")
-        # feature_config_enable_image_understanding= tool_parameters.get("feature_config_enable_image_understanding")
-        # print(f"feature_config_enable_image_understanding: {feature_config_enable_image_understanding}")
-        # feature_config_keep_header_footer = tool_parameters.get("feature_config_keep_header_footer")
-        # print(f"feature_config_keep_header_footer: {feature_config_keep_header_footer}")
-
         # 1. Get parameters
         file = tool_parameters.get("file")  # 获取file参数
-        # logger.debug(f"file: {file}")
+
         if not file:
             yield self.create_text_message("Error: No file provided.")
             return
@@ -55,29 +44,26 @@ class ExtractTool(Tool):
         # 获取output_formats参数
         output_formats = tool_parameters.get("output_formats") or ["json", "markdown"]
 
-        # print(f"output_formats: {output_formats}")
-        # print(f"output_formats type: {type(output_formats)}")
-
         if isinstance(output_formats, str):
             output_formats = ast.literal_eval(output_formats)
 
-        # print(f"output_formats: {output_formats}")
-        # print(f"output_formats type: {type(output_formats)}")
-
         # 获取element_formats参数
-        default_element_formats = {
-            "image": "url",
-            "formula": "latex",
-            "table": "html",
-            "cs": "image",
+        element_formats = {
+            "image": tool_parameters.get("element_formats_image") or DEFAULT_ELEMENT_FORMATS["image"],
+            "formula": tool_parameters.get("element_formats_formula") or DEFAULT_ELEMENT_FORMATS["formula"],
+            "table": tool_parameters.get("element_formats_table") or DEFAULT_ELEMENT_FORMATS["table"],
+            "cs": tool_parameters.get("element_formats_cs") or DEFAULT_ELEMENT_FORMATS["cs"],
         }
 
-        element_formats = {
-            "image": tool_parameters.get("element_formats_image") or default_element_formats["image"],
-            "formula": tool_parameters.get("element_formats_formula") or default_element_formats["formula"],
-            "table": tool_parameters.get("element_formats_table") or default_element_formats["table"],
-            "cs": tool_parameters.get("element_formats_cs") or default_element_formats["cs"],
-        }
+        for k, v in element_formats.items():
+            if v not in SUPPORTED_ELEMENT_FORMATS[k]:
+                supported_values = ", ".join(SUPPORTED_ELEMENT_FORMATS[k])
+                yield self.create_text_message(
+                    f"Error: Invalid element_formats_{k} value '{v}'. "
+                    f"Supported values: {supported_values}. "
+                )
+                return
+
 
         # 获取feature_config参数
         feature_config = {
