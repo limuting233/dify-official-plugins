@@ -4,6 +4,7 @@ import json
 from typing import Any, Dict, Generator
 import requests
 from dify_plugin import Tool
+from dify_plugin.entities.invoke_message import InvokeMessage
 from dify_plugin.entities.tool import ToolInvokeMessage
 
 logger = logging.getLogger(__name__)
@@ -26,6 +27,22 @@ SUPPORTED_ELEMENT_FORMATS = {
 
 
 class ExtractTool(Tool):
+    def _create_error_log(
+            self,
+            stage: str,
+            message: str,
+            data: Dict[str, Any] | None = None,
+    ) -> ToolInvokeMessage:
+        payload = {"stage": stage, "message": message}
+        if data:
+            payload.update(data)
+
+        return self.create_log_message(
+            label=f"SoMark Extract: {stage}",
+            data=payload,
+            status=InvokeMessage.LogMessage.LogStatus.ERROR,
+        )
+
     def _invoke(
             self, tool_parameters: Dict[str, Any]
     ) -> Generator[ToolInvokeMessage, None, None]:
@@ -58,12 +75,20 @@ class ExtractTool(Tool):
         for k, v in element_formats.items():
             if v not in SUPPORTED_ELEMENT_FORMATS[k]:
                 supported_values = ", ".join(SUPPORTED_ELEMENT_FORMATS[k])
-                yield self.create_text_message(
-                    f"Error: Invalid element_formats_{k} value '{v}'. "
-                    f"Supported values: {supported_values}. "
+                error_msg = (
+                    f"Invalid element_formats_{k} value '{v}'. "
+                    f"Supported values: {supported_values}."
                 )
-                return
-
+                yield self._create_error_log(
+                    stage="validate_parameters",
+                    message=error_msg,
+                    data={
+                        "parameter": f"element_formats_{k}",
+                        "value": v,
+                        "supported_values": SUPPORTED_ELEMENT_FORMATS[k],
+                    },
+                )
+                raise ValueError(error_msg)
 
         # 获取feature_config参数
         feature_config = {
@@ -84,8 +109,12 @@ class ExtractTool(Tool):
 
         api_key = self.runtime.credentials.get("api_key")
         if not api_key:
-            yield self.create_text_message("Error: API Key is required.")
-            return
+            error_msg = "API Key is required."
+            yield self._create_error_log(
+                stage="validate_credentials",
+                message=error_msg,
+            )
+            raise ValueError(error_msg)
 
         # 3. Construct URL
         base_url = base_url.rstrip("/")
@@ -110,17 +139,23 @@ class ExtractTool(Tool):
                     f"Somark API Error: {response.status_code} - {response.text}"
                 )
                 logger.error(error_msg)
-                yield self.create_text_message(error_msg)
-                return
+                yield self._create_error_log(
+                    stage="send_request",
+                    message=error_msg,
+                    data={"status_code": response.status_code},
+                )
+                raise RuntimeError(error_msg)
 
             # 6. Process response
             try:
                 result = response.json()
             except json.JSONDecodeError:
-                yield self.create_text_message(
-                    f"Error: Invalid JSON response from API. Content: {response.text}"
+                error_msg = f"Invalid JSON response from API. Content: {response.text}"
+                yield self._create_error_log(
+                    stage="parse_response",
+                    message=error_msg,
                 )
-                return
+                raise RuntimeError(error_msg)
 
             # Extract content
             json_content = ""
@@ -135,11 +170,7 @@ class ExtractTool(Tool):
                 result_block.get("outputs") if isinstance(result_block, dict) else None
             )
 
-            if (
-                    isinstance(result, dict)
-                    and result.get("code") == 0
-                    and isinstance(outputs, dict)
-            ):
+            if result.get("code") == 0:
                 md_value = outputs.get("markdown")
                 if isinstance(md_value, str) and md_value.strip():
                     md_content = md_value
@@ -149,12 +180,21 @@ class ExtractTool(Tool):
                     json_content = json.dumps(json_value, ensure_ascii=False)
 
             else:
-                error_content = json.dumps(result, ensure_ascii=False)
-                logger.error(
-                    "Somark API returned unexpected payload: %s", error_content
+                error_content = (
+                        (data_block.get("error") if isinstance(data_block, dict) else None)
+                        or result.get("message", "Unknown error")
                 )
-                yield self.create_text_message(error_content)
-                return
+
+                logger.error(
+                    "SoMark API returned error message: %s", error_content
+                )
+                error_msg = f"SoMark API returned error message: {error_content}"
+                yield self._create_error_log(
+                    stage="parse_response",
+                    message=error_msg,
+                    data={"response_error": error_content},
+                )
+                raise RuntimeError(error_msg)
 
             if json_content not in (None, "", [], {}):
                 yield self.create_variable_message("json_str", json_content)
@@ -164,10 +204,14 @@ class ExtractTool(Tool):
             yield self.create_json_message(result)
 
         except requests.exceptions.RequestException as e:
-            logger.error(f"Somark Network Error: {str(e)}")
-            yield self.create_text_message(
-                f"Network error connecting to Somark API: {str(e)}"
+            logger.error(f"SoMark Network Error: {str(e)}")
+            error_msg = f"Network error connecting to SoMark API: {str(e)}"
+            yield self._create_error_log(
+                stage="network_request",
+                message=error_msg,
             )
+            raise RuntimeError(error_msg) from e
+
         except Exception as e:
-            logger.error(f"Somark Plugin Error: {str(e)}")
-            yield self.create_text_message(f"Error invoking Somark API: {str(e)}")
+            logger.exception("SoMark Plugin Error: %s", str(e))
+            raise
