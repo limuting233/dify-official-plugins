@@ -215,20 +215,11 @@ including headings, tables, lists, formulas, and images.
 
 解析后的文档内容（Markdown 格式），保留原始版面结构，包括标题、表格、列表、公式和图片。
 
-**`json`** `object` — The parsed document content in JSON format, containing structured data for document elements such
-as text blocks, tables, formulas, images, coordinates, and page information. Suitable for advanced downstream processing
-in a Code node.
+**`json_str`** `string` — The parsed document content in JSON string format, containing structured data for document
+elements such as text blocks, tables, formulas, images, coordinates, and page information. Suitable for advanced
+downstream processing in a Code node after JSON parsing.
 
-解析后的文档内容（JSON 格式），包含文本块、表格、公式、图片、坐标位置、页码等结构化信息。适合在代码节点中进行高级处理。
-
-**`somarkdown`** `string` — The parsed document content in SoMarkDown format, a Markdown superset designed to preserve
-document structure and richer element semantics for rendering and downstream processing.
-
-解析后的文档内容（SoMarkDown 格式）。SoMarkDown 是一种 Markdown 超集，可更完整地保留文档结构和更丰富的元素语义，便于渲染与下游处理。
-
-**`zip`** `string` — The download URL of the ZIP archive containing the parsed output files.
-
-解析结果压缩包的下载链接（ZIP 格式）。
+解析后的文档内容（JSON 字符串格式），包含文本块、表格、公式、图片、坐标位置、页码等结构化信息。适合在代码节点中解析后做高级处理。
 
 **`text`** / **`files`** — Dify built-in variables, not populated by this plugin.
 
