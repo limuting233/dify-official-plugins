@@ -102,8 +102,7 @@ class ExtractTool(Tool):
         }
 
         # 2. Get configuration
-        # base_url = self.runtime.credentials.get("base_url")
-        base_url = "https://somark-sit.soulcode.cn/api/v2"
+        base_url = self.runtime.credentials.get("base_url")
         if not base_url:
             base_url = "https://somark.tech/api/v1"
 
