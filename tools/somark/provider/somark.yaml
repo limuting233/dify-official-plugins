@@ -23,8 +23,8 @@ credentials_for_provider:
       en_US: Base URL
       zh_Hans: Base URL
     placeholder:
-      en_US: For SoMark API, fill in https://somark.tech/api/v1; for SoMark Self-host, fill in your Base URL
-      zh_Hans: 使用 SoMark API 时填写 https://somark.tech/api/v1；SoMark Self-host 时填写您的Base URL 
+      en_US: For SoMark API, fill in https://somark.tech/api/v1; for SoMark Self-host, fill in your local Base URL
+      zh_Hans: 使用SoMark API时填写 https://somark.tech/api/v1;SoMark Self-host 时填写本地部署的Base URL
     required: true
     type: text-input
     url: https://docs.somark.tech/quickstart-auth
