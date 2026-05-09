@@ -18,6 +18,8 @@ resource:
       size: 1048576
     tool:
       enabled: true
+tags:
+  - rag
 plugins:
   tools:
     - provider/somark.yaml
