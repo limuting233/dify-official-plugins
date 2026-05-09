@@ -13,18 +13,18 @@ credentials_for_provider:
           zh_Hans: SoMark API
       - value: private
         label:
-          en_US: SoMark self-Host
-          zh_Hans: SoMark self-Host
+          en_US: SoMark Self-host
+          zh_Hans: SoMark Self-host
     help:
-      en_US: Choose "SoMark API" to use the official cloud service, or "SoMark self-Host" if you self-host SoMark.
-      zh_Hans: 选择"SoMark API"使用官方云服务；如果是自建 SoMark 服务，请选择"SoMark self-Host"。
+      en_US: Choose "SoMark API" to use the official cloud service, or "SoMark Self-host" if you self-host SoMark.
+      zh_Hans: 选择"SoMark API"使用官方云服务；如果是自建 SoMark 服务，请选择"SoMark Self-host"。
   base_url:
     label:
       en_US: Base URL
       zh_Hans: Base URL
     placeholder:
       en_US: Fill in your Base URL for self-hosted SoMark; fill in https://somark.tech/api/v1 for official API otherwise.
-      zh_Hans: SoMark self-Host 时填写 Base URL ；使用 SoMark 官方 API 填写 https://somark.tech/api/v1。
+      zh_Hans: SoMark Self-host 时填写 Base URL ；使用 SoMark 官方 API 填写 https://somark.tech/api/v1。
     required: true
     type: text-input
     url: https://docs.somark.tech/quickstart-auth
@@ -35,7 +35,7 @@ credentials_for_provider:
       zh_Hans: API 密钥
     placeholder:
       en_US: Required for SoMark API; leave blank for self-hosted SoMark
-      zh_Hans: 使用 SoMark 官方 API 时填写；SoMark self-Host 无需填写
+      zh_Hans: 使用 SoMark 官方 API 时填写；SoMark Self-host 无需填写
     required: false
     type: secret-input
     help:

@@ -27,7 +27,7 @@ class SoMarkProvider(ToolProvider):
             self._validate_api_key_via_official(api_key)
         elif deployment_type == "private":
             if not base_url:
-                raise ValueError("SoMark self-Host 时必须填写 Base URL ")
+                raise ValueError("SoMark Self-host 时必须填写 Base URL ")
 
     @staticmethod
     def _validate_api_key_via_official(api_key: str) -> None:

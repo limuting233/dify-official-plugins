@@ -103,8 +103,6 @@ class ExtractTool(Tool):
 
         # 2. Get configuration
         base_url = self.runtime.credentials.get("base_url")
-        if not base_url:
-            base_url = "https://somark.tech/api/v1"
 
         api_key = self.runtime.credentials.get("api_key")
       
