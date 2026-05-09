@@ -17,15 +17,17 @@ class SoMarkProvider(ToolProvider):
         api_key = (credentials.get("api_key") or "").strip()
 
         if base_url and not base_url.startswith(("http://", "https://")):
-            raise ValueError("Base URL 必须必须以 http:// 或 https:// 开头")
+            raise ValueError("Base URL 必须以 http:// 或 https:// 开头")
 
         if deployment_type == "somark_api":
             if not api_key:
                 raise ValueError("使用 SoMark 官方 API 时必须填写 API 密钥")
+            if base_url and base_url.rstrip("/") != SOMARK_OFFICIAL_API_BASE_URL:
+                raise ValueError("Base URL 或 API 密钥 无效，请检查后重试")
             self._validate_api_key_via_official(api_key)
         elif deployment_type == "private":
             if not base_url:
-                raise ValueError("私有化部署时必须填写 Base URL ")
+                raise ValueError("SoMark self-Host 时必须填写 Base URL ")
 
     @staticmethod
     def _validate_api_key_via_official(api_key: str) -> None:
@@ -45,7 +47,7 @@ class SoMarkProvider(ToolProvider):
             )
 
         if payload.get("code") == 1107:
-            raise ValueError("API 密钥无效，请检查后重试")
+            raise ValueError("Base URL 或 API 密钥 无效，请检查后重试")
 
         if not resp.ok:
             message = payload.get("message") or "未知错误"
