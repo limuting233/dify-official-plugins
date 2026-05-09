@@ -48,7 +48,7 @@ class ExtractTool(Tool):
     ) -> Generator[ToolInvokeMessage, None, None]:
 
         """
-        Invoke the Somark extraction tool.
+        Invoke the SoMark extraction tool.
         """
 
         # 1. Get parameters
@@ -107,13 +107,7 @@ class ExtractTool(Tool):
             base_url = "https://somark.tech/api/v1"
 
         api_key = self.runtime.credentials.get("api_key")
-        if not api_key:
-            error_msg = "API Key is required."
-            yield self._create_error_log(
-                stage="validate_credentials",
-                message=error_msg,
-            )
-            raise ValueError(error_msg)
+      
 
         # 3. Construct URL
         base_url = base_url.rstrip("/")
@@ -135,7 +129,7 @@ class ExtractTool(Tool):
 
             if response.status_code != 200:
                 error_msg = (
-                    f"Somark API Error: {response.status_code} - {response.text}"
+                    f"SoMark API Error: {response.status_code} - {response.text}"
                 )
                 logger.error(error_msg)
                 yield self._create_error_log(
