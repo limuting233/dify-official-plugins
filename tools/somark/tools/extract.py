@@ -28,10 +28,10 @@ SUPPORTED_ELEMENT_FORMATS = {
 
 class ExtractTool(Tool):
     def _create_error_log(
-            self,
-            stage: str,
-            message: str,
-            data: Dict[str, Any] | None = None,
+        self,
+        stage: str,
+        message: str,
+        data: Dict[str, Any] | None = None,
     ) -> ToolInvokeMessage:
         payload = {"stage": stage, "message": message}
         if data:
@@ -44,9 +44,8 @@ class ExtractTool(Tool):
         )
 
     def _invoke(
-            self, tool_parameters: Dict[str, Any]
+        self, tool_parameters: Dict[str, Any]
     ) -> Generator[ToolInvokeMessage, None, None]:
-
         """
         Invoke the SoMark extraction tool.
         """
@@ -66,10 +65,14 @@ class ExtractTool(Tool):
 
         # 获取element_formats参数
         element_formats = {
-            "image": tool_parameters.get("element_formats_image") or DEFAULT_ELEMENT_FORMATS["image"],
-            "formula": tool_parameters.get("element_formats_formula") or DEFAULT_ELEMENT_FORMATS["formula"],
-            "table": tool_parameters.get("element_formats_table") or DEFAULT_ELEMENT_FORMATS["table"],
-            "cs": tool_parameters.get("element_formats_cs") or DEFAULT_ELEMENT_FORMATS["cs"],
+            "image": tool_parameters.get("element_formats_image")
+            or DEFAULT_ELEMENT_FORMATS["image"],
+            "formula": tool_parameters.get("element_formats_formula")
+            or DEFAULT_ELEMENT_FORMATS["formula"],
+            "table": tool_parameters.get("element_formats_table")
+            or DEFAULT_ELEMENT_FORMATS["table"],
+            "cs": tool_parameters.get("element_formats_cs")
+            or DEFAULT_ELEMENT_FORMATS["cs"],
         }
 
         for k, v in element_formats.items():
@@ -92,24 +95,45 @@ class ExtractTool(Tool):
 
         # 获取feature_config参数
         feature_config = {
-            "enable_text_cross_page": tool_parameters.get("feature_config_enable_text_cross_page"),
-            "enable_table_cross_page": tool_parameters.get("feature_config_enable_table_cross_page"),
-            "enable_title_level_recognition": tool_parameters.get("feature_config_enable_title_level_recognition"),
-            "enable_inline_image": tool_parameters.get("feature_config_enable_inline_image"),
-            "enable_table_image": tool_parameters.get("feature_config_enable_table_image"),
-            "enable_image_understanding": tool_parameters.get("feature_config_enable_image_understanding"),
-            "keep_header_footer": tool_parameters.get("feature_config_keep_header_footer"),
+            "enable_text_cross_page": tool_parameters.get(
+                "feature_config_enable_text_cross_page"
+            ),
+            "enable_table_cross_page": tool_parameters.get(
+                "feature_config_enable_table_cross_page"
+            ),
+            "enable_title_level_recognition": tool_parameters.get(
+                "feature_config_enable_title_level_recognition"
+            ),
+            "enable_inline_image": tool_parameters.get(
+                "feature_config_enable_inline_image"
+            ),
+            "enable_table_image": tool_parameters.get(
+                "feature_config_enable_table_image"
+            ),
+            "enable_image_understanding": tool_parameters.get(
+                "feature_config_enable_image_understanding"
+            ),
+            "keep_header_footer": tool_parameters.get(
+                "feature_config_keep_header_footer"
+            ),
         }
 
         # 2. Get configuration
         base_url = self.runtime.credentials.get("base_url")
 
         api_key = self.runtime.credentials.get("api_key")
-      
+
+        deployment_type = self.runtime.credentials.get(
+            "deployment_type"
+        )  # "somark_api" or "private"
 
         # 3. Construct URL
         base_url = base_url.rstrip("/")
-        url = f"{base_url}/parse/sync"
+
+        if deployment_type == "somark_api":
+            url = f"{base_url}/parse/sync"
+        else:
+            url = f"{base_url}/extract"
 
         # 4. Prepare request
         try:
@@ -175,13 +199,12 @@ class ExtractTool(Tool):
                 error_content = "Unknown error"
                 if isinstance(result, dict):
                     error_content = (
-                        (data_block.get("error") if isinstance(data_block, dict) else None)
-                        or result.get("message", "Unknown error")
-                    )
+                        data_block.get("error")
+                        if isinstance(data_block, dict)
+                        else None
+                    ) or result.get("message", "Unknown error")
 
-                logger.error(
-                    "SoMark API returned error message: %s", error_content
-                )
+                logger.error("SoMark API returned error message: %s", error_content)
                 error_msg = f"SoMark API returned error message: {error_content}"
                 yield self._create_error_log(
                     stage="parse_response",
