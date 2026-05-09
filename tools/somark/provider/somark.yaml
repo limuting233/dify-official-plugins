@@ -13,34 +13,34 @@ credentials_for_provider:
           zh_Hans: SoMark API
       - value: private
         label:
-          en_US: Private Deployment
-          zh_Hans: 私有化部署
+          en_US: SoMark self-Host
+          zh_Hans: SoMark self-Host
     help:
-      en_US: Choose "SoMark API" to use the official cloud service, or "Private Deployment" if you self-host SoMark.
-      zh_Hans: 选择"SoMark API"使用官方云服务；如果是自建 SoMark 服务，请选择"私有化部署"。
+      en_US: Choose "SoMark API" to use the official cloud service, or "SoMark self-Host" if you self-host SoMark.
+      zh_Hans: 选择"SoMark API"使用官方云服务；如果是自建 SoMark 服务，请选择"SoMark self-Host"。
   base_url:
     label:
       en_US: Base URL
       zh_Hans: Base URL
     placeholder:
-      en_US: Fill in your Base URL for private deployment; leave blank to use the official SoMark API.
-      zh_Hans: 私有化部署时填写 Base URL ；使用 SoMark 官方 API 时留空即可。
-    required: false
+      en_US: Fill in your Base URL for self-hosted SoMark; fill in https://somark.tech/api/v1 for official API otherwise.
+      zh_Hans: SoMark self-Host 时填写 Base URL ；使用 SoMark 官方 API 填写 https://somark.tech/api/v1。
+    required: true
     type: text-input
-    url: https://somark.tech
+    url: https://docs.somark.tech/quickstart-auth
 
   api_key:
     label:
       en_US: API Key
       zh_Hans: API 密钥
     placeholder:
-      en_US: Required for SoMark API; leave blank for private deployment
-      zh_Hans: 使用 SoMark 官方 API 时填写；私有化部署无需填写
+      en_US: Required for SoMark API; leave blank for self-hosted SoMark
+      zh_Hans: 使用 SoMark 官方 API 时填写；SoMark self-Host 无需填写
     required: false
     type: secret-input
     help:
-      en_US: "Fill in for SoMark API (no key? [Get 1000 free pages here](https://somark.tech/workbench/purchase)). Not required for private deployment."
-      zh_Hans: "使用 SoMark 官方 API 时填写（没有 ApiKey？[点击此处免费领 1000 页](https://somark.tech/workbench/purchase)）；私有化部署无需填写。"
+      en_US: 'Fill in for SoMark API (no key? [Get 1000 free pages here](https://somark.tech/workbench/purchase)). Not required for private deployment.'
+      zh_Hans: '使用 SoMark 官方 API 时填写（没有 ApiKey？[点击此处免费领 1000 页](https://somark.tech/workbench/purchase)）；私有化部署无需填写。'
 
 identity:
   author: SoulCode
