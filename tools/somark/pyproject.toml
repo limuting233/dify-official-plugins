@@ -1,7 +1,7 @@
 [project]
 name = "somark"
 version = "0.0.1"
-description = "Somark document extraction plugin"
+description = "SoMark document extraction plugin"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
