@@ -2,14 +2,14 @@ identity:
   name: extract
   author: SoulCode
   label:
-    en_US: Extract Document
+    en_US: SoMark Document Parser
     zh_Hans: SoMark 文档解析
 
 description:
   human:
-    en_US: Convert various document types—including PDFs, images, and more—into structured Markdown or JSON using the SoMark service.
-    zh_Hans: 使用 SoMark 服务将各种文档（如 PDF、图片等）转换为结构化的 Markdown 或 JSON 格式。
-  llm: A precise and reliable tool that utilizes the SoMark service to convert various document formats (PDF, PNG, JPG, etc.) into clean, structured Markdown or JSON format, preserving the original layout and content hierarchy.
+    en_US: Convert various document types—including PDFs, images, and more—into structured Markdown or JSON using the SoMark Document Parser.
+    zh_Hans: 使用 SoMark 文档解析将各种文档（如 PDF、图片等）转换为结构化的 Markdown 或 JSON 格式。
+  llm: A precise and reliable tool that utilizes the SoMark Document Parser to convert various document formats (PDF, PNG, JPG, etc.) into clean, structured Markdown or JSON format, preserving the original layout and content hierarchy.
 
 parameters:
   - name: file
