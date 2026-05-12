@@ -32,7 +32,7 @@ credentials_for_provider:
   api_key:
     label:
       en_US: API Key
-      zh_Hans: API 密钥
+      zh_Hans: API Key
     placeholder:
       en_US: Required for SoMark API; leave blank for self-hosted SoMark
       zh_Hans: 使用 SoMark 官方 API 时填写；SoMark Self-host 无需填写
