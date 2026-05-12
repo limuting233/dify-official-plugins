@@ -130,10 +130,7 @@ class ExtractTool(Tool):
         # 3. Construct URL
         base_url = base_url.rstrip("/")
 
-        if deployment_type == "somark_api":
-            url = f"{base_url}/parse/sync"
-        else:
-            url = f"{base_url}/extract"
+
 
         # 4. Prepare request
         try:
@@ -147,7 +144,7 @@ class ExtractTool(Tool):
             }
 
             # 5. Send request
-            response = requests.post(url, files=files, data=data, timeout=120)
+            response = requests.post(f"{base_url}/parse/sync", files=files, data=data, timeout=600)
 
             if response.status_code != 200:
                 error_msg = (
@@ -177,71 +174,42 @@ class ExtractTool(Tool):
             md_content = ""
             error_content = ""
 
-            if deployment_type == "somark_api":
 
-                data_block = result.get("data") if isinstance(result, dict) else None
-                result_block = (
-                    data_block.get("result") if isinstance(data_block, dict) else None
-                )
-                outputs = (
-                    result_block.get("outputs")
-                    if isinstance(result_block, dict)
-                    else None
-                )
-
-                if isinstance(result, dict) and result.get("code") == 0:
-                    if isinstance(outputs, dict):
-                        md_value = outputs.get("markdown")
-                        if isinstance(md_value, str) and md_value.strip():
-                            md_content = md_value
-
-                        json_value = outputs.get("json")
-                        if json_value not in (None, "", [], {}):
-                            json_content = json.dumps(json_value, ensure_ascii=False)
-
-                else:
-                    error_content = "Unknown error"
-                    if isinstance(result, dict):
-                        error_content = (
-                            data_block.get("error")
-                            if isinstance(data_block, dict)
-                            else None
-                        ) or result.get("message", "Unknown error")
-
-                    logger.error("SoMark API returned error message: %s", error_content)
-                    error_msg = f"SoMark API returned error message: {error_content}"
-                    yield self._create_error_log(
-                        stage="parse_response",
-                        message=error_msg,
-                        data={"response_error": error_content},
-                    )
-                    raise RuntimeError(error_msg)
-
+            data_block = result.get("data") if isinstance(result, dict) else None
+            result_block = (
+                data_block.get("result") if isinstance(data_block, dict) else None
+            )
+            outputs = (
+                result_block.get("outputs")
+                if isinstance(result_block, dict)
+                else None
+            )
+            if isinstance(result, dict) and result.get("code") == 0:
+                if isinstance(outputs, dict):
+                    md_value = outputs.get("markdown")
+                    if isinstance(md_value, str) and md_value.strip():
+                        md_content = md_value
+                    json_value = outputs.get("json")
+                    if json_value not in (None, "", [], {}):
+                        json_content = json.dumps(json_value, ensure_ascii=False)
             else:
-                if result.get("code") != 0:
-                    error_content = "Unknown error"
-                    if result.get("message").strip():
-                        error_content = result.get("message").strip()
-                    logger.error("SoMark API returned error message: %s", error_content)
-                    error_msg = f"SoMark API returned error message: {error_content}"
-                    yield self._create_error_log(
-                        stage="parse_response",
-                        message=error_msg,
-                        data={"response_error": error_content},
-                    )
-                    raise RuntimeError(error_msg)
-                else:
-                    json_content = result.get("outputs", {}).get("json", {})
-                    if json_content not in (None, "", [], {}):
-                        json_content = json.dumps(json_content, ensure_ascii=False)
-                    else:
-                        json_content = ""
+                error_content = "Unknown error"
+                if isinstance(result, dict):
+                    error_content = (
+                        data_block.get("error")
+                        if isinstance(data_block, dict)
+                        else None
+                    ) or result.get("message", "Unknown error")
+                logger.error("SoMark API returned error message: %s", error_content)
+                error_msg = f"SoMark API returned error message: {error_content}"
+                yield self._create_error_log(
+                    stage="parse_response",
+                    message=error_msg,
+                    data={"response_error": error_content},
+                )
+                raise RuntimeError(error_msg)
 
-                    md_content = result.get("outputs", {}).get("markdown", "")
-                    if md_content not in (None, "", []):
-                        md_content = md_content.strip()
-                    else:
-                        md_content = ""
+          
 
             if json_content not in (None, "", [], {}):
                 yield self.create_variable_message("json_str", json_content)
