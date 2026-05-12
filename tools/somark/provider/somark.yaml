@@ -16,15 +16,15 @@ credentials_for_provider:
           en_US: SoMark Self-host
           zh_Hans: SoMark Self-host
     help:
-      en_US: Choose "SoMark API" to use the official cloud service, or "SoMark Self-host" if you self-host SoMark.
-      zh_Hans: 选择"SoMark API"使用官方云服务；如果是自建 SoMark 服务，请选择"SoMark Self-host"。
+      en_US: Choose "SoMark API" to use the official service, or "SoMark Self-host" if you self-host SoMark.
+      zh_Hans: 选择"SoMark API"使用 SoMark 官方服务；如果是私有化部署的 SoMark 服务，请选择"SoMark Self-host"。
   base_url:
     label:
       en_US: Base URL
       zh_Hans: Base URL
     placeholder:
       en_US: For SoMark API, fill in https://somark.tech/api/v1; for SoMark Self-host, fill in your local Base URL
-      zh_Hans: 使用SoMark API时填写 https://somark.tech/api/v1;SoMark Self-host 时填写本地部署的Base URL
+      zh_Hans: 使用 SoMark API 时填写 https://somark.tech/api/v1; SoMark Self-host 时填写本地部署的 Base URL
     required: true
     type: text-input
     url: https://docs.somark.tech/quickstart-auth
