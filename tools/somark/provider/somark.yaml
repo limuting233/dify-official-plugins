@@ -1,46 +1,43 @@
 credentials_for_provider:
-  deployment_type:
-    label:
-      en_US: Deployment Type
-      zh_Hans: 部署方式
-    type: select
-    required: true
-    default: somark_api
-    options:
-      - value: somark_api
-        label:
-          en_US: SoMark API
-          zh_Hans: SoMark API
-      - value: private
-        label:
-          en_US: SoMark Self-host
-          zh_Hans: SoMark Self-host
-    help:
-      en_US: Choose "SoMark API" to use the official service, or "SoMark Self-host" if you self-host SoMark.
-      zh_Hans: 选择"SoMark API"使用 SoMark 官方服务；如果是私有化部署的 SoMark 服务，请选择"SoMark Self-host"。
+  # deployment_type:
+  #   label:
+  #     en_US: Deployment Type
+  #     zh_Hans: 部署方式
+  #   type: select
+  #   required: true
+  #   default: somark_api
+  #   options:
+  #     - value: somark_api
+  #       label:
+  #         en_US: SoMark API
+  #         zh_Hans: SoMark API
+  #     - value: private
+  #       label:
+  #         en_US: SoMark Self-host
+  #         zh_Hans: SoMark Self-host
+  #   help:
+  #     en_US: Choose "SoMark API" to use the official service, or "SoMark Self-host" if you self-host SoMark.
+  #     zh_Hans: 选择"SoMark API"使用 SoMark 官方服务；如果是私有化部署的 SoMark 服务，请选择"SoMark Self-host"。
   base_url:
     label:
       en_US: Base URL
       zh_Hans: Base URL
     placeholder:
-      en_US: For SoMark API, fill in https://somark.tech/api/v1; for SoMark Self-host, fill in your local Base URL
-      zh_Hans: 使用 SoMark API 时填写 https://somark.tech/api/v1; SoMark Self-host 时填写本地部署的 Base URL
+      en_US: For SoMark API, fill in https://somark.tech/api/v1; for private deployment, fill in your local Base URL
+      zh_Hans: 使用 SoMark API 时填写 https://somark.tech/api/v1; 私有化部署时填写本地部署的 Base URL
     required: true
     type: text-input
-    url: https://docs.somark.tech/quickstart-auth
 
   api_key:
     label:
       en_US: API Key
       zh_Hans: API Key
     placeholder:
-      en_US: Required for SoMark API; leave blank for self-hosted SoMark
-      zh_Hans: 使用 SoMark 官方 API 时填写；SoMark Self-host 无需填写
+      en_US: Required for SoMark API; leave blank for private deployment
+      zh_Hans: 使用 SoMark API 时填写；私有化部署无需填写
     required: false
     type: secret-input
-    help:
-      en_US: 'Fill in for SoMark API (no key? [Get 1000 free pages here](https://somark.tech/workbench/purchase)). Not required for private deployment.'
-      zh_Hans: '使用 SoMark 官方 API 时填写（没有 ApiKey？[点击此处免费领 1000 页](https://somark.tech/workbench/purchase)）；私有化部署无需填写。'
+    url: https://docs.somark.tech/quickstart-auth
 
 identity:
   author: SoulCode
@@ -49,7 +46,7 @@ identity:
     en_US: SoMark
     zh_Hans: SoMark
   description:
-    en_US: SoMark Document Extraction Service
+    en_US: SoMark Document Parsing Service
     zh_Hans: SoMark 文档解析服务
   icon: icon.png
 
