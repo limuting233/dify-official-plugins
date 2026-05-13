@@ -1,23 +1,5 @@
 credentials_for_provider:
-  # deployment_type:
-  #   label:
-  #     en_US: Deployment Type
-  #     zh_Hans: 部署方式
-  #   type: select
-  #   required: true
-  #   default: somark_api
-  #   options:
-  #     - value: somark_api
-  #       label:
-  #         en_US: SoMark API
-  #         zh_Hans: SoMark API
-  #     - value: private
-  #       label:
-  #         en_US: SoMark Self-host
-  #         zh_Hans: SoMark Self-host
-  #   help:
-  #     en_US: Choose "SoMark API" to use the official service, or "SoMark Self-host" if you self-host SoMark.
-  #     zh_Hans: 选择"SoMark API"使用 SoMark 官方服务；如果是私有化部署的 SoMark 服务，请选择"SoMark Self-host"。
+
   base_url:
     label:
       en_US: Base URL

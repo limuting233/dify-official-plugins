@@ -12,7 +12,6 @@ class SoMarkProvider(ToolProvider):
         """
         Validate credentials.
         """
-        # deployment_type = credentials.get("deployment_type") or "somark_api"
         base_url = (credentials.get("base_url") or "").strip()
         api_key = (credentials.get("api_key") or "")
 
@@ -31,15 +30,7 @@ class SoMarkProvider(ToolProvider):
         if base_url == SOMARK_API_BASE_URL:
             self._validate_api_key_via_official(api_key)
 
-        # if deployment_type == "somark_api":
-        #     if not api_key:
-        #         raise ValueError("使用 SoMark 官方 API 时必须填写 API Key")
-        #     if base_url and base_url.rstrip("/") != SOMARK_OFFICIAL_API_BASE_URL:
-        #         raise ValueError("Base URL 或 API Key 无效，请检查后重试")
-        #     self._validate_api_key_via_official(api_key)
-        # elif deployment_type == "private":
-        #     if not base_url:
-        #         raise ValueError("SoMark Self-host 时必须填写 Base URL ")
+    
 
     @staticmethod
     def _validate_api_key_via_official(api_key: str) -> None:

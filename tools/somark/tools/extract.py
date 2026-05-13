@@ -123,9 +123,7 @@ class ExtractTool(Tool):
 
         api_key = self.runtime.credentials.get("api_key").strip()
 
-        # deployment_type = self.runtime.credentials.get(
-        #     "deployment_type"
-        # )  # "somark_api" or "private"
+      
 
         # 3. Construct URL
         base_url = base_url.rstrip("/")
