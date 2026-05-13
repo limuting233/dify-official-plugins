@@ -6,7 +6,7 @@ credentials_for_provider:
       zh_Hans: Base URL
     placeholder:
       en_US: For SoMark API, fill in https://somark.tech/api/v1; for self-hosted deployment, fill in your local Base URL
-      zh_Hans: 使用 SoMark API 时填写 https://somark.tech/api/v1; 私有化部署时填写本地部署的 Base URL
+      zh_Hans: 使用 SoMark API 时填写 https://somark.tech/api/v1；私有化部署时填写本地部署的 Base URL
     required: true
     type: text-input
 
