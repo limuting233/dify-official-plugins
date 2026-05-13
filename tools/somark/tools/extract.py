@@ -119,13 +119,13 @@ class ExtractTool(Tool):
         }
 
         # 2. Get configuration
-        base_url = self.runtime.credentials.get("base_url")
+        base_url = self.runtime.credentials.get("base_url").strip()
 
-        api_key = self.runtime.credentials.get("api_key")
+        api_key = self.runtime.credentials.get("api_key").strip()
 
-        deployment_type = self.runtime.credentials.get(
-            "deployment_type"
-        )  # "somark_api" or "private"
+        # deployment_type = self.runtime.credentials.get(
+        #     "deployment_type"
+        # )  # "somark_api" or "private"
 
         # 3. Construct URL
         base_url = base_url.rstrip("/")
@@ -148,7 +148,7 @@ class ExtractTool(Tool):
 
             if response.status_code != 200:
                 error_msg = (
-                    f"SoMark API Error: {response.status_code} - {response.text}"
+                    f"SoMark Error: {response.status_code} - {response.text}"
                 )
                 logger.error(error_msg)
                 yield self._create_error_log(
@@ -162,7 +162,7 @@ class ExtractTool(Tool):
             try:
                 result = response.json()
             except json.JSONDecodeError:
-                error_msg = f"Invalid JSON response from API. Content: {response.text}"
+                error_msg = f"Invalid JSON response. Content: {response.text}"
                 yield self._create_error_log(
                     stage="parse_response",
                     message=error_msg,
@@ -200,8 +200,8 @@ class ExtractTool(Tool):
                         if isinstance(data_block, dict)
                         else None
                     ) or result.get("message", "Unknown error")
-                logger.error("SoMark API returned error message: %s", error_content)
-                error_msg = f"SoMark API returned error message: {error_content}"
+                logger.error("SoMark returned error message: %s", error_content)
+                error_msg = f"SoMark returned error message: {error_content}"
                 yield self._create_error_log(
                     stage="parse_response",
                     message=error_msg,
@@ -220,7 +220,7 @@ class ExtractTool(Tool):
 
         except requests.exceptions.RequestException as e:
             logger.error(f"SoMark Network Error: {str(e)}")
-            error_msg = f"Network error connecting to SoMark API: {str(e)}"
+            error_msg = f"Network error connecting to SoMark: {str(e)}"
             yield self._create_error_log(
                 stage="network_request",
                 message=error_msg,
