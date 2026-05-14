@@ -393,7 +393,7 @@ class ExtractTool(Tool):
             )
             raise
 
-        # 9. 解析 outputs
+        # 解析 outputs
         md_content = ""
         json_content = ""
 
