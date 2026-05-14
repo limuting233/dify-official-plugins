@@ -31,7 +31,7 @@ SUPPORTED_ELEMENT_FORMATS = {
 # ---------- 重试 / 轮询 配置 ----------
 
 # SoMark 并发限流错误码；提交阶段命中该码时按退避策略重试
-QPS_LIMIT_CODE = 1124
+QPS_LIMIT_CODE = 1137
 
 # 提交阶段：对 "并发槽位已满" 的拒绝做有限重试
 SUBMIT_BUDGET_SECONDS = 10 * 60  # 提交重试的总时间预算（10 分钟）
